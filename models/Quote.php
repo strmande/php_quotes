@@ -52,10 +52,10 @@ class Quote {
             }
 
             // Turn to JSON & output
-             
+            return json_encode($quotes_arr);
         }
 
-        return json_encode($quotes_arr);
+        return json_encode([]);
     }
 
     public function read_single($type) {
