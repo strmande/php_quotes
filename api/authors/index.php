@@ -2,9 +2,6 @@
     header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json');
         $method = $_SERVER['REQUEST_METHOD'];
-        // printf($method);
-        // printf($_GET["id"]);
-        // printf($_SERVER['QUERY_STRING']);
 
         switch ($method) {
             case "GET":

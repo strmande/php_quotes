@@ -111,13 +111,7 @@ class Quote {
               );
             // Make JSON
             return json_encode($category_item);
-            // Set properties
-            // $this->id = $row['id'];
-            // $this->quote = $row['quote'];
-            // $this->author_id = $row['author'];
-            // $this->category_id = $row['category'];
-
-            // return true;
+           
         } else {
             // return array, logic in read()
             // Post Array
@@ -142,39 +136,6 @@ class Quote {
             return $quotes_arr;
         }
     }
-
-    // public function read_single($type) {
-    //     // Create query
-    //     if ($type === "id")
-    //     $query = 'SELECT q.id, q.quote, a.author, c.category
-    //         FROM ' . $this->table . ' q
-    //         INNER JOIN authors a ON a.id = q.author_id
-    //         INNER JOIN categories c ON c.id = q.category_id
-    //         WHERE q.id = ?';
-
-    //     // Prepare statement
-    //     $stmt = $this->conn->prepare($query);
-
-    //     // Bind ID
-    //     $stmt->bindParam(1, $this->id);
-
-    //     //Execute query
-    //     $stmt->execute();
-
-    //     // Check if the query returned any rows
-    //     if ($stmt->rowCount() > 0) {
-    //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    //         // Set properties
-    //         $this->quote = $row['quote'];
-    //         $this->author_id = $row['author'];
-    //         $this->category_id = $row['category'];
-    //         return true;
-    //     } else {
-    //         // Handle the case where the ID is not found
-    //         echo json_encode(array('message' => 'quote id not found'));
-    //         return false;
-    //     }
-    // }
 
 
     // Create Quote
@@ -204,8 +165,6 @@ class Quote {
 
         return false;
     }
-
-    // Update Quote
     // Update Quote
     public function update() {
         try {
@@ -213,7 +172,6 @@ class Quote {
             $authorExistsQuery = 'SELECT COUNT(*) as count FROM authors WHERE id = :author_id';
             $authorExistsStmt = $this->conn->prepare($authorExistsQuery);
             // clean data
-            // $this->author_id = htmlspecialchars(strip_tags($this->author_id));
             
             $authorExistsStmt->bindParam(':author_id', $this->author_id);
             $authorExistsStmt->execute();

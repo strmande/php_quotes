@@ -25,28 +25,6 @@
             return $stmt;
         }
         
-        // public function read() {
-        //     //  Create query
-        //     $query = 'SELECT a.id, a.author, 
-        //         JSON_AGG(JSON_BUILD_OBJECT("quote", q.quote,
-        //                                    "category", c.category)) AS quotes 
-        //         FROM ' . $this->table . ' a
-        //         LEFT JOIN
-        //             quotes q ON a.id = q.author_id
-        //         LEFT JOIN 
-        //             categories c ON c.id = q.category_id
-        //         GROUP BY a.id, a.author
-        //         ORDER BY a.id';
-
-        //     // Prepare statement
-        //     $stmt = $this->conn->prepare($query);
-        //     // Execute query
-        //     $stmt->execute();
-
-        //     return $stmt;
-        // }
-
-        
         public function read_single() {
             //  Create query
             $query = 'SELECT *
@@ -78,39 +56,6 @@
 
         }
         
-
-        // public function read_single() {
-        //     try {
-        //         if (empty($this->id)) {
-        //             throw new Exception('ID cannot be null.');
-        //         }
-        //         //  Create query
-        //         $query = 'SELECT *
-        //         FROM
-        //             ' . $this->table . '
-        //         WHERE
-        //             id = ?';
-
-        //         // Prepare statement
-        //         $stmt = $this->conn->prepare($query);
-
-        //         // Bind ID
-        //         $stmt->bindParam(1, $this->id);
-
-        //         //Execute query
-        //         $stmt->execute();
-
-        //         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        //         // Set properties
-        //         $this->author = $row['author'];
-        //     } catch (Exception $e) {
-        //         // Print error message
-        //         echo json_encode(array('message' => $e->getMessage()));
-        //         return false;
-        //     }
-
-        // }
 
         // Create Author
         public function create() {

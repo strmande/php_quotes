@@ -49,28 +49,3 @@
 	}
 
 
-	// if ($result) {
-	// 	// Create array
-	// 	$quotes_arr = array();
-    // 	$quotes_arr['data'] = array();
-	// 	while($row = $result->fetch(PDO::FETCH_ASSOC)) {
-	// 		extract($row);
-	// 		$quote_item = array(
-	// 		'id' => $quote->id,
-	// 		'quote' => $quote->quote,
-	// 		'author' => $quote->author_id,
-	// 		'category' => $quote->category_id
-	// 		);
-	// 		// Push to "data"
-	// 		array_push($quotes_arr['data'], $quote_item);
-	// 	}
-	// 	// Make JSON
-	// 	// print_r(json_encode($quotes_arr));
-	// 	echo json_encode($quotes_arr);
-	// } else {
-	// 	// No posts
-	// 	echo json_encode(
-	// 		array('message' => 'No Quote Found')
-	// 	);
-	
-	//   }
