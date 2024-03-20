@@ -35,7 +35,7 @@ class Quote {
         if($num > 0) {
             // Post Array
             $quotes_arr = array();
-            $quotes_arr['data'] = array();
+            // $quotes_arr['data'] = array();
 
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 extract($row);
@@ -48,7 +48,7 @@ class Quote {
                 );
 
                 // Push to "data"
-                array_push($quotes_arr['data'], $quote_item);
+                array_push($quotes_arr, $quote_item);
             }
 
             // Turn to JSON & output
@@ -100,25 +100,26 @@ class Quote {
         $stmt->execute();
 
         // Check if the query returned any rows
-        // echo ($stmt->rowCount());
         if ($stmt->rowCount() === 1) {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            // $this->$quote->$id = $row['id'];
+            $this->id = $row['id'];
             $category_item = array(
                 'id' =>$row['id'], // use this
                 'quote' => $row['quote'],
-                'author_id' => $row['author'],
-                'category_id' => $row['category']
+                'author' => $row['author'],
+                'category' => $row['category']
               );
             // Make JSON
-            return json_encode($category_item);
+            return $category_item;
            
         } else {
             // return array, logic in read()
             // Post Array
             $quotes_arr = array();
-            $quotes_arr['data'] = array();
+            // $quotes_arr['data'] = array();
             if ($stmt->rowCount() < 2) {
-                $quotes_arr['error'] = array('message' => 'No quote found');
+                $quotes_arr['error'] = array('message' => 'No Quotes Found');
             }
             while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 extract($row);
@@ -131,7 +132,7 @@ class Quote {
                 );
 
                 // Push to "data"
-                array_push($quotes_arr['data'], $quote_item);
+                array_push($quotes_arr, $quote_item);
             }
             return $quotes_arr;
         }
@@ -140,6 +141,37 @@ class Quote {
 
     // Create Quote
     public function create() {
+        // Check if the author_id exists in the authors table
+        $authorExistsQuery = 'SELECT COUNT(*) as count FROM authors WHERE id = :author_id';
+        $authorExistsStmt = $this->conn->prepare($authorExistsQuery);
+
+        // clean data
+
+        $authorExistsStmt->bindParam(':author_id', $this->author_id);
+        $authorExistsStmt->execute();
+        $authorExistsResult = $authorExistsStmt->fetch(PDO::FETCH_ASSOC);
+        $error = array();
+        if ($authorExistsResult['count'] == 0) {
+            $error['error'] = array('message' => "author_id Not Found");
+          return $error;
+            // throw new Exception('Author with id ' . $this->author_id . ' does not exist.');
+        }
+
+        // check if category_id exists in the categories table
+        $categoryExistsQuery = 'SELECT COUNT(*) as count FROM authors WHERE id = :category_id';
+        $categoryExistsStmt = $this->conn->prepare($categoryExistsQuery);
+
+        // clean data  
+        $categoryExistsStmt->bindParam(':category_id', $this->category_id);
+        $categoryExistsStmt->execute();
+        $categoryExistsResult = $categoryExistsStmt->fetch(PDO::FETCH_ASSOC);
+
+
+        if ($categoryExistsResult['count'] == 0) {
+            $error['error'] = array('message' => "category_id Not Found");
+          return $error;
+            // throw new Exception('Author with id ' . $this->author_id . ' does not exist.');
+        }
         // Create query
         $query = 'INSERT INTO ' . $this->table . ' (quote, author_id, category_id) VALUES (:quote, :author_id, :category_id)';
         // Prepare statement
@@ -156,8 +188,21 @@ class Quote {
         $stmt->bindParam(':category_id', $this->category_id);
 
         // Execute query
-        if($stmt->execute()) {
-            return true;
+        // if ($stmt->execute()) {
+        //     // Return the ID of the newly inserted quote
+        //     echo ($this->conn->lastInsertId());
+        //     return $this->conn->lastInsertId();
+            
+        // }
+        // Execute query
+        $stmt->execute();
+        // Execute query
+        if($stmt->rowCount() === 1) {
+            $this->id = $this->conn->lastInsertId();
+            return array("data" => true );
+        } else {
+            $error['error'] = array('message' => 'No Quotes Found');
+            return $error;
         }
 
         // Print error if something goes wrong
@@ -171,14 +216,33 @@ class Quote {
             // Check if the author_id exists in the authors table
             $authorExistsQuery = 'SELECT COUNT(*) as count FROM authors WHERE id = :author_id';
             $authorExistsStmt = $this->conn->prepare($authorExistsQuery);
+
             // clean data
             
             $authorExistsStmt->bindParam(':author_id', $this->author_id);
             $authorExistsStmt->execute();
             $authorExistsResult = $authorExistsStmt->fetch(PDO::FETCH_ASSOC);
-
+            $error = array();
             if ($authorExistsResult['count'] == 0) {
-                throw new Exception('Author with id ' . $this->author_id . ' does not exist.');
+                $error['error'] = array('message' => "author_id Not Found");
+              return $error;
+                // throw new Exception('Author with id ' . $this->author_id . ' does not exist.');
+            }
+
+            // check if category_id exists in the categories table
+            $categoryExistsQuery = 'SELECT COUNT(*) as count FROM authors WHERE id = :category_id';
+            $categoryExistsStmt = $this->conn->prepare($categoryExistsQuery);
+          
+            // clean data  
+            $categoryExistsStmt->bindParam(':category_id', $this->category_id);
+            $categoryExistsStmt->execute();
+            $categoryExistsResult = $categoryExistsStmt->fetch(PDO::FETCH_ASSOC);
+
+          
+            if ($categoryExistsResult['count'] == 0) {
+                $error['error'] = array('message' => "category_id Not Found");
+              return $error;
+                // throw new Exception('Author with id ' . $this->author_id . ' does not exist.');
             }
 
             // Update query
@@ -201,11 +265,15 @@ class Quote {
             $stmt->bindParam(':id', $this->id);
 
             // Execute query
-            if($stmt->execute()) {
-                return true;
+            $stmt->execute();
+            // Execute query
+            if($stmt->rowCount() === 1) {
+                return array("data" => true );
             } else {
-                throw new Exception('Failed to execute the update query.');
+                $error['error'] = array('message' => 'No Quotes Found');
+                return $error;
             }
+            
         } catch (PDOException $e) {
             // Print error message
             echo json_encode(array('message' => 'Error: ' . $e->getMessage()));
@@ -232,10 +300,12 @@ class Quote {
 
             // Bind data
             $stmt->bindParam(':id', $this->id);
-
+            $stmt->execute();
             // Execute query
-            if($stmt->execute()) {
+            if($stmt->rowCount() === 1) {
                 return true;
+            } else {
+                return false;
             }
         } catch (Exception $e) {
             // Print error message

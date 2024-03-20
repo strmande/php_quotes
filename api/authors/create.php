@@ -25,9 +25,12 @@
 
         // Create author 
         if($author ->create()) {
-            echo json_encode(
-                array('message' => 'Author Created')
+          $author_item = array(
+              'id' =>$author->id, // use this
+              'author' => $author->author
             );
+          // Make JSON
+          echo json_encode($author_item);
         } else {
             echo json_encode(
                 array('message' => 'Author Not Created')
@@ -35,7 +38,7 @@
         }
     }  else {
         echo json_encode(
-            array('message' => 'Missing required parameters')
+            array('message' => 'Missing Required Parameters')
         );
     }
     ?>

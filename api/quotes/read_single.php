@@ -41,7 +41,7 @@
 	// echo $result;
 
 	if(!empty($result['error'])) {
-		echo $result['error']['message'];
+		echo json_encode($result['error']);
 	} else {
 		echo json_encode($result);
 	}

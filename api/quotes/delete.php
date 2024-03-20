@@ -20,15 +20,17 @@
    $data = json_decode(file_get_contents("php://input"));
 
    // Set Id to update
-   $quote->id = isset($_GET['id']) ? $_GET['id'] : die();
+   $quote->id = isset($data->id) ? $data->id : die();
 
-   // Delete quote 
-   if($quote ->delete()) {
-    echo json_encode(
-        array('message' => 'Quote Deleted')
-    );
+   // Delete quote
+  if($quote->delete()) {
+       $quote_item = array(
+           'id' =>$quote->id
+         );
+       // Make JSON
+       echo json_encode($quote_item);
    } else {
     echo json_encode(
-        array('message' => 'Quote Not Deleted')
+        array('message' => 'No Quotes Found')
     );
    }

@@ -20,13 +20,15 @@
    $data = json_decode(file_get_contents("php://input"));
 
    // Set Id to update
-   $author->id = isset($_GET['id']) ? $_GET['id'] : die();
+   $author->id = isset($data->id) ? $data->id : die();
 
    // Delete post 
    if($author ->delete()) {
-    echo json_encode(
-        array('message' => 'Author Deleted')
-    );
+       $author_item = array(
+           'id' =>$author->id
+         );
+       // Make JSON
+       echo json_encode($author_item);
    } else {
     echo json_encode(
         array('message' => 'Author Not Deleted')

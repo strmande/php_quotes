@@ -17,29 +17,40 @@
 
     // Get raw posted data
     $data = json_decode(file_get_contents("php://input"));
-
     // Check if the id property exists in the JSON data
-    if (empty($_GET['id'])) {
+    if (empty($data->id)) {
         echo json_encode(array('message' => 'Invalid or empty id.'));
         exit;
     }
     if (!empty($data->quote) && !empty($data->author_id) && !empty($data->category_id)) {
 
         // Set Id to update
-        $quote->id = isset($_GET['id']) ? $_GET['id'] : die();
+        $quote->id = isset($data->id) ? $data->id : die();
         $quote->quote = $data->quote;
         $quote->author_id = $data->author_id;
         $quote->category_id = $data->category_id;
 
         // Update quote 
-        if ($quote->update()) {
-            echo json_encode(array('message' => 'Quote Updated'));
-        } else {
-            echo json_encode(array('message' => 'Quote Not Updated'));
-        }
+        $result = $quote ->update();
+        if (empty($result['error'])) {
+            $quote_item = array(
+                'id' =>$quote->id, // use this
+                'quote' => $quote->quote,
+                'author_id' => $quote->author_id,
+                'category_id' => $quote->category_id
+              );
+            // Make JSON
+            echo json_encode($quote_item);
+         } else {
+            echo json_encode($result['error']);
+          // echo json_encode(
+          //     array('message' => 'No Quotes Found')
+          // );
+         }
     } else {
         echo json_encode(
-            array('message' => 'Missing required parameters')
+            array('message' => 'Missing Required Parameters')
         );
     }
+    
 ?>

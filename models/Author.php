@@ -50,7 +50,7 @@
                 return true;
             } else {
                 // Handle the case where the ID is not found
-                echo json_encode(array('message' => 'author id not found'));
+                echo json_encode(array('message' => 'author_id Not Found'));
                 return false;
             }
 
@@ -72,6 +72,7 @@
 
             // Execute query
             if($stmt->execute()) {
+                $this->id = $this->conn->lastInsertId();
                 return true;
             }
 

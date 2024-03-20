@@ -2,9 +2,11 @@
     header('Access-Control-Allow-Origin: *');
         header('Content-Type: application/json');
         $method = $_SERVER['REQUEST_METHOD'];
-        // printf($method);
-        // printf($_GET["id"]);
-        // printf($_SERVER['QUERY_STRING']);
+    if ($method === 'OPTIONS') {
+        header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+        header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
+        exit();
+    }
 
         switch ($method) {
             case "GET":
@@ -25,10 +27,4 @@
                 break;
             default:
                 echo "No request method";
-        }
-
-        if ($method === 'OPTIONS') {
-            header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-            header('Access-Control-Allow-Headers: Origin, Accept, Content-Type, X-Requested-With');
-            exit();
         }

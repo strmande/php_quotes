@@ -26,18 +26,25 @@ if (!empty($data->quote) && !empty($data->author_id) && !empty($data->category_i
     $quote->category_id = $data->category_id;
 
     // Create quote
-    if ($quote->create()) {
-        echo json_encode(
-            array('message' => 'Quote Created')
-        );
-    } else {
-        echo json_encode(
-            array('message' => 'Quote Not Created')
-        );
-    }
+    $result = $quote ->create();
+    if (empty($result['error'])) {
+        $quote_item = array(
+            'id' =>$quote->id, // use this
+            'quote' => $quote->quote,
+            'author_id' => $quote->author_id,
+            'category_id' => $quote->category_id
+          );
+        // Make JSON
+        echo json_encode($quote_item);
+     } else {
+        echo json_encode($result['error']);
+      // echo json_encode(
+      //     array('message' => 'No Quotes Found')
+      // );
+     }
 } else {
     echo json_encode(
-        array('message' => 'Missing required parameters')
+        array('message' => 'Missing Required Parameters')
     );
 }
 ?>

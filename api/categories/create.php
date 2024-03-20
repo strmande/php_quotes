@@ -24,9 +24,12 @@
 
         // Create category 
         if($category ->create()) {
-            echo json_encode(
-                array('message' => 'Category Created')
+          $category_item = array(
+              'id' =>$category->id, // use this
+              'category' => $category->category,
             );
+          // Make JSON
+          echo json_encode($category_item);
         } else {
             echo json_encode(
                 array('message' => 'Category Not Created')
@@ -34,7 +37,7 @@
         }
     } else {
     echo json_encode(
-        array('message' => 'Missing required parameters')
+        array('message' => 'Missing Required Parameters')
     );
 }
 ?>

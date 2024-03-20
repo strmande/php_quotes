@@ -21,30 +21,33 @@
   
 
     // Check if the id property exists in the JSON data
-    if (empty($_GET['id'])) {
+    if (empty($data->id)) {
         echo json_encode(array('message' => 'Invalid or empty id.'));
         exit;
     }
     if (!empty($data->author)) {
 
         // Set Id to update
-        $author->id = isset($_GET['id']) ? $_GET['id'] : die();
+        $author->id = isset($data->id) ? $data->id : die();
 
         $author->author = $data->author;
 
         // Update post 
         if($author ->update()) {
-            echo json_encode(
-                array('message' => 'Author Updated')
-            );
+            $author_item = array(
+                'id' =>$author->id, // use this
+                'author' => $author->author
+              );
+            // Make JSON
+            echo json_encode($author_item);
         } else {
             echo json_encode(
-                array('message' => 'Author Not Updated')
+                array('message' => 'author_id Not Found')
             );
         }
     } else {
         echo json_encode(
-            array('message' => 'Missing required parameters')
+            array('message' => 'Missing Required Parameters')
         );
     }
 ?>
